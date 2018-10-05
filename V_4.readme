@@ -1,0 +1,40 @@
+**V_1
+* IMPACT: N/A
+> Initial Package
+
+**V_2
+* IMPACT: Host Programs only (Upgrade from V1.0> Switch Host Program EXE's)
+> [Bugfix] Enemy EntityInfo Location
+
+**V_3
+* IMPACT: Minimal (extra features!) - Update Host-Programs, Plugin Library & Include files
+> [INTERFACE EXTENSION] Added Interface Function [bool Enemy_GetInfo(EntityInfo entity, EnemyInfo& enemy)]
+						> Remarks: This function can be called multiple times during the same frame,
+									note that the used EntityInfo (entityHash) is invalid after that frame.
+									So caching all the EntityInfos from Enemy won't work, new hashes are
+									generated every frame.
+									
+> [INTERFACE EXTENSION] Added Interface Function [bool Inventory_DropItem(UINT slotId)]
+						> Remarks: Items are rehashed after dropping
+						
+> [INTERFACE EXTENSION] Added Interface Function [CheapVariant Item_GetMetadata(ItemInfo item, const string& category)]
+						> Remarks: Returns the metadata of a given item for a given category.
+						> CheapVariant: Union, which can contain a UINT, INT, BOOL or FLOAT. (See Exam_HelperStructs.h)
+						
+> [STRUCT EXTENSION]	Extended the EnemyInfo Struct > Added an extra field (=> int Tag)	
+					
+> [INTERFACE EXTENSION] Added Interface Function [bool Enemy_SetTag(EnemyInfo enemy, int tag)]
+						> Remarks: Used to update a (user-defined) Tag (INT) of an Enemy
+						
+**V_4
+* IMPACT: Minimal -> Undefined (Based on your usage of the fixed feature) / HOST-PROGRAMS UPDATED
+> [BUG FIX] Inventory_GetItem(UINT, ITEMINFO&)
+			> Inventory_GetItem always returned the first item in the inventory
+			> Fixed, function now works as designed and returns the correct slotId now
+			
+> [BUG FIX] Memory Leak Detection in Plugin
+			> In the previous version only Memory Leaks in the Host-Program were traced.
+			> Now you'll also see the memory leaks caused by the Plugin
+			> Due to the nature of this plugin-system, _crt_SetBreakAlloc(...) gives undefined behavior (different Memory boundaries between Host-Program and Plugin DLL)
+			> So, that means you'll have to be trace your steps manually when searching for the Memory Leak source.
+			> Original Memory Manager (the one that generates the Memory.log files) is removed, so no additional mmgr files are generated anymore (next to the exe)
